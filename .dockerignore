@@ -1,0 +1,28 @@
+# Dependencies
+**/node_modules
+.pnpm-store
+
+# Build outputs
+**/dist
+**/build
+**/coverage
+
+# Git
+.git
+.gitignore
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# IDE
+.vscode
+.idea
+
+# Docker
+compose*.yaml
+Dockerfile*
