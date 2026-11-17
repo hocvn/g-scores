@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "concurrently -k \"pnpm run dev:compile\" \"pnpm run dev:serve\"",
+    "dev:compile": "tsc --watch --preserveWatchOutput",
+    "dev:serve": "node --env-file=.env --watch dist/main.js",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node --env-file=.env dist/main.js",
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma skills sync || exit 0"
   },
@@ -34,9 +36,10 @@
     "@types/node": "^24.19.2",
     "@types/pg": "^8.23.1",
     "@types/pg-copy-streams": "^1.2.5",
+    "concurrently": "^10.0.7",
     "dotenv": "^17.4.2",
     "prisma": "^7.10.1",
     "tsx": "^4.23.15",
-    "typescript": "~6.0.3"
+    "typescript": "6.0.3"
   }
 }
