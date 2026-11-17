@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client.js';
-import { PrismaService } from '../prisma/prisma.service.js';
+import { Injectable } from "@nestjs/common";
+import { Prisma } from "../generated/prisma/client.js";
+import { PrismaService } from "../prisma/prisma.service.js";
+import { ReportSubject } from "./types/report-subject.js";
 
 @Injectable()
 export class ReportsService {
@@ -8,15 +9,15 @@ export class ReportsService {
 
   async getSubjectDistribution() {
     const subjects = [
-      'toan',
-      'ngu_van',
-      'ngoai_ngu',
-      'vat_li',
-      'hoa_hoc',
-      'sinh_hoc',
-      'lich_su',
-      'dia_li',
-      'gdcd',
+      "toan",
+      "ngu_van",
+      "ngoai_ngu",
+      "vat_li",
+      "hoa_hoc",
+      "sinh_hoc",
+      "lich_su",
+      "dia_li",
+      "gdcd",
     ] as const;
 
     const result = await Promise.all(
@@ -92,5 +93,43 @@ export class ReportsService {
       hoa_hoc: Number(row.hoa_hoc),
       total: Number(row.total),
     }));
+  }
+
+  async getScoreSpectrum(subject: ReportSubject) {
+    const groups = await this.prisma.scores.groupBy({
+      by: [subject],
+      _count: {
+        _all: true,
+      },
+    });
+
+    const counts = new Map<number, number>();
+
+    for (const group of groups) {
+      const rawScore = group[subject];
+
+      if (rawScore === null || rawScore === undefined) {
+        continue;
+      }
+
+      const score = Number(rawScore);
+
+      if (!Number.isFinite(score) || score < 0 || score > 10) {
+        continue;
+      }
+
+      counts.set(score, (counts.get(score) ?? 0) + group._count._all);
+    }
+
+    const points = Array.from(counts, ([score, count]) => ({
+      score,
+      count,
+    })).sort((a, b) => a.score - b.score);
+
+    return {
+      subject,
+      total: points.reduce((sum, point) => sum + point.count, 0),
+      points,
+    };
   }
 }
