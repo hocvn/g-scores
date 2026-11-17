@@ -31,3 +31,8 @@ vite.svg
 .cache/
 .turbo/
 .nx/
+
+# Agent
+.agents
+.claude
+.windsurf

@@ -35,7 +35,7 @@ A fullstack web application built with **React, Node.js, and TypeScript**, organ
 │   │   ├── package.json
 │   │   └── vite.config.ts
 │   │
-│   └── backend/              # Express backend
+│   └── backend/              # Backend
 │       ├── src/
 │       │   ├── app.ts
 │       │   └── server.ts
