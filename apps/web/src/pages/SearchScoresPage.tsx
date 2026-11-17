@@ -4,9 +4,9 @@ import { Search, LoaderCircle } from "lucide-react";
 
 import { useScore } from "../features/scores/hooks/useScore";
 import { ScoreDetails } from "../features/scores/components/ScoreDetails";
-import { EmptySearchState } from "../features/scores/components/Empty";
-import { LoadingSearchState } from "../features/scores/components/Loading";
-import { NotFoundSearchState } from "../features/scores/components/NotFound";
+import { EmptySearchState } from "../features/scores/components/EmptyState";
+import { LoadingSearchState } from "../features/scores/components/LoadingState";
+import { NotFoundSearchState } from "../features/scores/components/NotFoundState";
 import { ErrorState } from "../components/common/ErrorState";
 
 export function SearchScoresPage() {

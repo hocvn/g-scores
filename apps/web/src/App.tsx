@@ -1,7 +1,8 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import { SearchScoresPage } from "./pages/SearchScoresPage";
 import { ReportsPage } from "./pages/ReportsPage";
+import { DashboardPage } from "./pages/DashboardPage";
 
 function PlaceholderPage({ title }: { title: string }) {
   return (
@@ -16,7 +17,7 @@ export default function App() {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Navigate to="/scores" replace />} />
+        <Route path="/" element={<DashboardPage />} />
         <Route path="/scores" element={<SearchScoresPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route
