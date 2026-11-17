@@ -6,6 +6,15 @@
     "dev": "pnpm --parallel --filter @app/web --filter backend dev",
     "build": "pnpm --filter backend build && pnpm --filter @app/web build",
     "lint": "pnpm --filter @app/web lint",
-    "typecheck": "pnpm --filter backend typecheck"
+    "typecheck": "pnpm --filter backend typecheck",
+    "import:scores": "tsx data/import-scores.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
+    "@types/pg-copy-streams": "^1.2.5",
+    "pg": "^8.23.1",
+    "pg-copy-streams": "^7.0.0",
+    "tsx": "^4.23.15"
   }
 }
