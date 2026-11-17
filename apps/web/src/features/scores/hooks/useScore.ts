@@ -11,8 +11,6 @@ export function useScore(sbd: string | null) {
 
     enabled: Boolean(sbd),
 
-    staleTime: 5 * 60 * 1000, // 5 minnutes
-
     retry: (failureCount, error) => {
       if (
         axios.isAxiosError(error) &&

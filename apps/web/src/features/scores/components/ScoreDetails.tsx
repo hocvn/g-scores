@@ -1,5 +1,5 @@
 import { GraduationCap, BookOpen } from "lucide-react";
-import type { Score, ScoreSubject, } from "../types/scores.types";
+import type { Score, ScoreSubject } from "../types/scores.types";
 
 interface ScoreDetailsProps {
   score: Score;
@@ -48,9 +48,7 @@ export function ScoreDetails({ score }: ScoreDetailsProps) {
           <p className="text-sm font-medium text-indigo-600">
             Registration Number
           </p>
-          <p className="mt-1 text-xl font-bold text-indigo-950">
-            {score.sbd}
-          </p>
+          <p className="mt-1 text-xl font-bold text-indigo-950">{score.sbd}</p>
         </div>
       </div>
 
@@ -58,32 +56,21 @@ export function ScoreDetails({ score }: ScoreDetailsProps) {
       <div className="overflow-hidden rounded-xl border border-slate-200">
         <div className="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-5 py-4">
           <BookOpen size={18} className="text-indigo-600" />
-          <h4 className="font-semibold text-slate-900">
-            Subject Scores
-          </h4>
+          <h4 className="font-semibold text-slate-900">Subject Scores</h4>
         </div>
 
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-slate-600">
             <tr>
-              <th className="px-5 py-3 font-medium">
-                Subject
-              </th>
-              <th className="px-5 py-3 text-right font-medium">
-                Score
-              </th>
+              <th className="px-5 py-3 font-medium">Subject</th>
+              <th className="px-5 py-3 text-right font-medium">Score</th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-slate-100">
             {subjects.map(({ key, label }) => (
-              <tr
-                key={key}
-                className="transition-colors hover:bg-slate-50"
-              >
-                <td className="px-5 py-4 text-slate-700">
-                  {label}
-                </td>
+              <tr key={key} className="transition-colors hover:bg-slate-50">
+                <td className="px-5 py-4 text-slate-700">{label}</td>
 
                 <td className="px-5 py-4 text-right font-semibold tabular-nums text-slate-900">
                   {formatScore(score[key])}
