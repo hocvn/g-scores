@@ -2,7 +2,7 @@ import {
   numberFormatter,
   scoreLevels,
   subjectNames,
-} from "../constants/constants";
+} from "../../../constants/subjects";
 import type { SubjectDistribution } from "../types/reports.type";
 import {
   ResponsiveContainer,

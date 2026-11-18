@@ -11,22 +11,11 @@ import {
 import {
   numberFormatter,
   scoreFormatter,
-} from "../../reports/constants/constants";
+  subjectNames,
+} from "../../../constants/subjects";
 import { useScoreSpectrum } from "../hooks/useScoreSpectrum";
 import type { Subject } from "../types/dashboard.type";
 import { LoaderCircle } from "lucide-react";
-
-const subjectNames: Record<Subject, string> = {
-  toan: "Mathematics",
-  ngu_van: "Literature",
-  ngoai_ngu: "Foreign Language",
-  vat_li: "Physics",
-  hoa_hoc: "Chemistry",
-  sinh_hoc: "Biology",
-  lich_su: "History",
-  dia_li: "Geography",
-  gdcd: "Civic Education",
-};
 
 type ScoreSpectrumChartProps = {
   subject: Subject;
