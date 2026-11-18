@@ -6,10 +6,7 @@ import { ScoreSpectrumChart } from "../features/dashboard/components/ScoreSpectr
 import { StatCard } from "../features/dashboard/components/StatCard";
 import type { Subject } from "../features/dashboard/types/dashboard.type";
 import { LoadingState } from "../features/reports/components/LoadingState";
-import {
-  numberFormatter,
-  subjectNames,
-} from "../features/reports/constants/constants";
+import { numberFormatter, subjectNames } from "../constants/subjects";
 import { useReport } from "../features/reports/hooks/useReport";
 import { ChevronDown } from "lucide-react";
 

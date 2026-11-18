@@ -1,4 +1,4 @@
-import { scoreFormatter } from "../constants/constants";
+import { scoreFormatter } from "../../../constants/subjects";
 import type { TopGroupAStudent } from "../types/reports.type";
 
 type TopGroupATableProps = {

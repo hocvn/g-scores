@@ -1,24 +1,12 @@
 import { GraduationCap, BookOpen } from "lucide-react";
+import { subjectNames } from "../../../constants/subjects";
 import type { Score, ScoreSubject } from "../types/scores.types";
 
 interface ScoreDetailsProps {
   score: Score;
 }
 
-const subjects: {
-  key: ScoreSubject;
-  label: string;
-}[] = [
-  { key: "toan", label: "Mathematics" },
-  { key: "ngu_van", label: "Literature" },
-  { key: "ngoai_ngu", label: "Foreign Language" },
-  { key: "vat_li", label: "Physics" },
-  { key: "hoa_hoc", label: "Chemistry" },
-  { key: "sinh_hoc", label: "Biology" },
-  { key: "lich_su", label: "History" },
-  { key: "dia_li", label: "Geography" },
-  { key: "gdcd", label: "Civic Education" },
-];
+const subjects = Object.entries(subjectNames) as [ScoreSubject, string][];
 
 function formatScore(value: number | string | null): string {
   if (value === null || value === "") {
@@ -68,7 +56,7 @@ export function ScoreDetails({ score }: ScoreDetailsProps) {
           </thead>
 
           <tbody className="divide-y divide-slate-100">
-            {subjects.map(({ key, label }) => (
+            {subjects.map(([key, label]) => (
               <tr key={key} className="transition-colors hover:bg-slate-50">
                 <td className="px-5 py-4 text-slate-700">{label}</td>
 
