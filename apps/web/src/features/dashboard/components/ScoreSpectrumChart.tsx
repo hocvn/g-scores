@@ -11,21 +11,12 @@ import {
 import {
   numberFormatter,
   scoreFormatter,
-} from "../../reports/constants/constants";
+  subjectNames,
+} from "../../../constants/subjects";
 import { useScoreSpectrum } from "../hooks/useScoreSpectrum";
 import type { Subject } from "../types/dashboard.type";
-
-const subjectNames: Record<Subject, string> = {
-  toan: "Mathematics",
-  ngu_van: "Literature",
-  ngoai_ngu: "Foreign Language",
-  vat_li: "Physics",
-  hoa_hoc: "Chemistry",
-  sinh_hoc: "Biology",
-  lich_su: "History",
-  dia_li: "Geography",
-  gdcd: "Civic Education",
-};
+import { LoaderCircle } from "lucide-react";
+import { useTheme } from "../../../components/theme/useTheme";
 
 type ScoreSpectrumChartProps = {
   subject: Subject;
@@ -33,6 +24,10 @@ type ScoreSpectrumChartProps = {
 
 export function ScoreSpectrumChart({ subject }: ScoreSpectrumChartProps) {
   const { data, isPending, isError, refetch } = useScoreSpectrum(subject);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const chartText = isDark ? "#cbd5e1" : "#475569";
+  const chartLine = isDark ? "#64748b" : "#e2e8f0";
 
   return (
     <section className="min-w-0 rounded-xl bg-white p-5 shadow-sm sm:p-6">
@@ -49,9 +44,16 @@ export function ScoreSpectrumChart({ subject }: ScoreSpectrumChartProps) {
       {isPending ? (
         <div
           role="status"
-          className="flex h-80 items-center justify-center text-slate-500"
+          className="flex h-42 flex-col items-center justify-center gap-3 text-center"
         >
-          Loading score distribution...
+          <LoaderCircle
+            size={32}
+            aria-hidden="true"
+            className="animate-spin text-indigo-600"
+          />
+          <p className="text-sm text-slate-500">
+            Loading score distribution...
+          </p>
         </div>
       ) : isError ? (
         <div role="alert" className="py-12 text-center">
@@ -85,7 +87,7 @@ export function ScoreSpectrumChart({ subject }: ScoreSpectrumChartProps) {
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
-                stroke="#e2e8f0"
+                stroke={chartLine}
               />
 
               <XAxis
@@ -93,24 +95,29 @@ export function ScoreSpectrumChart({ subject }: ScoreSpectrumChartProps) {
                 type="number"
                 domain={[0, 10]}
                 ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-                tick={{ fontSize: 12 }}
+                tick={{ fill: chartText, fontSize: 12 }}
+                axisLine={{ stroke: chartLine }}
+                tickLine={{ stroke: chartLine }}
                 tickMargin={8}
                 label={{
                   value: "Score",
                   position: "insideBottomRight",
                   offset: -12,
+                  fill: chartText,
                 }}
               />
 
               <YAxis
                 width={85}
                 allowDecimals={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fill: chartText, fontSize: 12 }}
+                axisLine={{ stroke: chartLine }}
+                tickLine={{ stroke: chartLine }}
                 tickFormatter={(value: number) => numberFormatter.format(value)}
               />
 
               <Tooltip
-                cursor={{ fill: "#eff6ff" }}
+                cursor={{ fill: isDark ? "#334155" : "#eff6ff" }}
                 labelFormatter={(value) =>
                   `Score: ${scoreFormatter.format(Number(value))}`
                 }
@@ -120,14 +127,18 @@ export function ScoreSpectrumChart({ subject }: ScoreSpectrumChartProps) {
                 ]}
                 contentStyle={{
                   borderRadius: 12,
-                  border: "1px solid #e2e8f0",
+                  border: `1px solid ${isDark ? "#475569" : "#e2e8f0"}`,
+                  backgroundColor: isDark ? "#1e293b" : "#ffffff",
+                  color: isDark ? "#f8fafc" : "#0f172a",
                 }}
+                labelStyle={{ color: isDark ? "#f8fafc" : "#0f172a" }}
               />
 
               <Bar
                 dataKey="count"
                 name="Candidates"
                 fill="#2563eb"
+                activeBar={false}
                 maxBarSize={12}
                 radius={[3, 3, 0, 0]}
               />
