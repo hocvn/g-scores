@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model scores {
+  sbd          String   @id(map: "exam_scores_pkey") @db.VarChar(20)
+  toan         Decimal? @db.Decimal(4, 2)
+  ngu_van      Decimal? @db.Decimal(4, 2)
+  ngoai_ngu    Decimal? @db.Decimal(4, 2)
+  vat_li       Decimal? @db.Decimal(4, 2)
+  hoa_hoc      Decimal? @db.Decimal(4, 2)
+  sinh_hoc     Decimal? @db.Decimal(4, 2)
+  lich_su      Decimal? @db.Decimal(4, 2)
+  dia_li       Decimal? @db.Decimal(4, 2)
+  gdcd         Decimal? @db.Decimal(4, 2)
+  ma_ngoai_ngu String?  @db.VarChar(10)
+}
