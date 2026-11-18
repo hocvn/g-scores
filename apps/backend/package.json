@@ -7,10 +7,11 @@
     "dev": "concurrently -k \"pnpm run dev:compile\" \"pnpm run dev:serve\"",
     "dev:compile": "tsc --watch --preserveWatchOutput",
     "dev:serve": "node --env-file=.env --watch dist/main.js",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node --env-file=.env dist/main.js",
+    "start:prod": "node dist/main.js",
     "typecheck": "tsc --noEmit",
-    "postinstall": "prisma skills sync || exit 0"
+    "db:deploy": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
