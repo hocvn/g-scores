@@ -1,4 +1,3 @@
-
 import { createReadStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
@@ -8,7 +7,7 @@ import { from as copyFrom } from "pg-copy-streams";
 const { Client } = pg;
 
 const csvPath = fileURLToPath(
-  new URL("./diem_thi_thpt_2024.csv", import.meta.url)
+  new URL("./diem_thi_thpt_2024.csv", import.meta.url),
 );
 
 const client = new Client({
@@ -50,15 +49,12 @@ async function main() {
         )
         FROM STDIN
         WITH (FORMAT CSV, HEADER TRUE, NULL '')
-      `)
+      `),
     );
 
     console.log("Reading CSV...");
 
-    await pipeline(
-      createReadStream(csvPath),
-      copyStream
-    );
+    await pipeline(createReadStream(csvPath), copyStream);
 
     console.log("Updating database...");
 
@@ -105,9 +101,7 @@ async function main() {
 
     await client.query("COMMIT");
 
-    console.log(
-      `Import completed: ${result.rowCount} records processed`
-    );
+    console.log(`Import completed: ${result.rowCount} records processed`);
   } catch (error) {
     await client.query("ROLLBACK");
     throw error;

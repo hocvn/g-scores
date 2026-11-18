@@ -14,6 +14,7 @@ import {
 } from "../../reports/constants/constants";
 import { useScoreSpectrum } from "../hooks/useScoreSpectrum";
 import type { Subject } from "../types/dashboard.type";
+import { LoaderCircle } from "lucide-react";
 
 const subjectNames: Record<Subject, string> = {
   toan: "Mathematics",
@@ -49,9 +50,16 @@ export function ScoreSpectrumChart({ subject }: ScoreSpectrumChartProps) {
       {isPending ? (
         <div
           role="status"
-          className="flex h-80 items-center justify-center text-slate-500"
+          className="flex h-42 flex-col items-center justify-center gap-3 text-center"
         >
-          Loading score distribution...
+          <LoaderCircle
+            size={32}
+            aria-hidden="true"
+            className="animate-spin text-indigo-600"
+          />
+          <p className="text-sm text-slate-500">
+            Loading score distribution...
+          </p>
         </div>
       ) : isError ? (
         <div role="alert" className="py-12 text-center">
