@@ -3,7 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: pnpm --filter @app/web dev --host 0.0.0.0
+    command: >
+      sh -c "pnpm install --frozen-lockfile && pnpm --filter @app/web dev --host 0.0.0.0"
     ports:
       - "5173:5173"
     volumes:
@@ -20,7 +21,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: pnpm --filter backend dev
+    command: >
+      sh -c "pnpm install --frozen-lockfile && pnpm --filter backend dev"
     ports:
       - "3000:3000"
     volumes:

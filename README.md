@@ -1,188 +1,159 @@
-# g-scores
-GO assessment\
+# G-Scores
 
-## Tech Stack
-A fullstack web application built with **React, Node.js, and TypeScript**, organized as a monorepo using **pnpm Workspaces**.
+GO assessments
 
-### Frontend
-- **React 19** — UI library
-- **TypeScript 6** — Type safety
-- **Vite 8** — Development server and build tool
-- **Tailwind CSS 4** — Styling
-- **React Router 7** — Client-side routing
-- **TanStack Query 5** — Server state management
+G-Scores is a web application for exploring Vietnam's 2024 high-school examination results. It lets users look up a candidate by registration number, compare score distributions, and view the top candidates in Group A (Mathematics, Physics, and Chemistry).
 
-### Backend
-- **Node.js 24** — JavaScript runtime
-- **Express 5** — REST API framework
-- **TypeScript 6** — Type safety
-- **tsx** — TypeScript execution and watch mode
-- **CORS** — Cross-origin resource sharing
-- **dotenv** — Environment variable management
+**Live demo:** [g-scores-seven.vercel.app](https://g-scores-seven.vercel.app/)
 
-### Development Tools
-- **pnpm Workspaces** — Monorepo and dependency management
-- **Docker & Docker Compose** — Containerized development
-- **ESLint** — Code linting
+> **Note:** The demo backend and database run on Render's free plan. After roughly 15 minutes without traffic, the services sleep; the first visit afterwards may take a short time while they start again.
 
-## Project Structure
+## Features
+
+- Dashboard with subject-level totals, score thresholds, and score-spectrum charts.
+- Candidate score search by registration number.
+- Reports with score distribution by subject and the top 10 Group A candidates.
+- Persistent light and dark themes.
+
+## Tech stack
+
+- Frontend: React, TypeScript, Vite, Tailwind CSS, TanStack Query, and Recharts.
+- Backend: NestJS, TypeScript, Prisma, and PostgreSQL.
+- Tooling: pnpm workspaces, Docker Compose, and ESLint.
+
+## Project structure
 
 ```text
 .
 ├── apps/
-│   ├── web/                  # React frontend
-│   │   ├── src/
-│   │   ├── package.json
-│   │   └── vite.config.ts
-│   │
-│   └── backend/              # Backend
-│       ├── src/
-│       │   ├── app.ts
-│       │   └── server.ts
-│       ├── package.json
-│       └── tsconfig.json
-│
-├── Dockerfile.dev
-├── compose.yaml
-├── .dockerignore
-├── .gitignore
-├── package.json
-├── pnpm-lock.yaml
-└── pnpm-workspace.yaml
+│   ├── backend/       # NestJS API and Prisma schema/migrations
+│   └── web/           # React/Vite application
+├── data/              # Source CSV and import script
+├── compose.yaml       # Development Docker Compose stack
+└── Dockerfile.dev     # Development image
 ```
 
-## Prerequisites
+## Run locally with Docker
 
-Choose one of the following development methods.
+### Prerequisites
 
-**Docker (Recommended)**
-- Docker Desktop
-- Docker Compose v2
+- Docker Desktop with Docker Compose v2
 
-**Without Docker**
-- Node.js 24
-- pnpm (version compatible with the project lockfile)
+### Start the application
 
-## Getting Started
+1. Create a root `.env` file from the example and fill in the PostgreSQL credentials:
 
-### 1. Clone the repository
+   ```sh
+   cp .env.example .env
+   ```
 
-```bash
-git clone https://github.com/hocvn/g-scores.git
-cd g-scores
-```
+   Example values:
 
-### 2. Configure environment variables
+   ```env
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=postgres
+   POSTGRES_DB=gscores
+   ```
 
-If environment example files are provided, copy them to the appropriate `.env` files and configure the required values.
+2. Build and start the containers:
 
-Never commit credentials, API keys, or other secrets.
+   ```sh
+   docker compose up --build -d
+   ```
 
-### 3. Run with Docker (Recommended)
+3. Create the database schema and import the supplied CSV data:
 
-Build and start all services:
+   ```sh
+   docker compose exec api pnpm --filter backend db:deploy
+   docker compose exec api pnpm import:scores
+   ```
 
-```bash
-docker compose up --build
-```
+4. Open the application at [http://localhost:5173](http://localhost:5173). The API is available at [http://localhost:3000/api](http://localhost:3000/api).
 
-Run containers in the background:
+The development containers install dependencies from `pnpm-lock.yaml` before starting. This keeps Docker's `node_modules` volumes in sync after dependencies change.
 
-```bash
-docker compose up -d --build
-```
+### Stop the stack
 
-Stop all services:
-
-```bash
+```sh
 docker compose down
 ```
 
-View logs:
+To also remove the PostgreSQL data volume, run `docker compose down -v`.
 
-```bash
-docker compose logs -f
-```
+## Run locally without Docker
 
-### 4. Run without Docker
+### Prerequisites
 
-Install dependencies from the project root:
+- Node.js 22 or newer
+- pnpm (enable it with `corepack enable` if needed)
+- PostgreSQL 17 or a compatible PostgreSQL instance
 
-```bash
-pnpm install
-```
+### Setup
 
-Start both frontend and backend:
+1. Install workspace dependencies from the repository root:
 
-```bash
-pnpm dev
-```
+   ```sh
+   pnpm install
+   ```
 
-Or run each application separately:
+2. Create `apps/backend/.env` from its example:
 
-**Frontend**
+   ```sh
+   cp apps/backend/.env.example apps/backend/.env
+   ```
 
-```bash
-pnpm --filter @app/web dev
-```
+   Configure it for your PostgreSQL database:
 
-**Backend**
+   ```env
+   PORT=3000
+   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/gscores
+   ```
 
-```bash
-pnpm --filter backend dev
-```
+3. Create the schema:
 
-## Local URLs
+   ```sh
+   pnpm --filter backend db:deploy
+   ```
 
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:5173 |
-| Backend | http://localhost:3000 |
-| API Health Check | http://localhost:3000/api/health |
+4. Import the source dataset. Set `DATABASE_URL` for this command to the same connection string used above:
 
-## API Proxy
+   ```sh
+   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/gscores pnpm import:scores
+   ```
 
-During development, Vite forwards requests starting with `/api` to the backend.
+   In PowerShell:
 
-When running with Docker Compose:
+   ```powershell
+   $env:DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/gscores"
+   pnpm import:scores
+   ```
 
-```ts
-proxy: {
-  "/api": {
-    target: "http://api:3000",
-    changeOrigin: true
-  }
-}
-```
+5. Start the frontend and backend in development mode:
 
-The `api` hostname refers to the Docker Compose service.
+   ```sh
+   pnpm dev
+   ```
 
-When running without Docker, the proxy target must resolve to the locally running backend, typically `http://localhost:3000`.
+Open [http://localhost:5173](http://localhost:5173). Vite proxies `/api` requests to the backend at `http://localhost:3000`.
 
-## Available Commands
+## Useful commands
 
-| Command | Description |
-|---|---|
-| `pnpm install` | Install workspace dependencies |
-| `pnpm dev` | Start frontend and backend |
-| `pnpm --filter @app/web dev` | Start frontend only |
-| `pnpm --filter backend dev` | Start backend only |
-| `pnpm --filter @app/web build` | Build frontend |
-| `pnpm --filter backend build` | Compile backend TypeScript |
-| `pnpm --filter @app/web lint` | Run frontend ESLint |
-| `docker compose up --build` | Build and start Docker services |
-| `docker compose down` | Stop Docker services |
-| `docker compose logs -f` | View Docker logs |
+| Command                           | Description                                           |
+| --------------------------------- | ----------------------------------------------------- |
+| `pnpm dev`                        | Start frontend and backend development servers.       |
+| `pnpm build`                      | Build both applications.                              |
+| `pnpm lint`                       | Lint the frontend.                                    |
+| `pnpm typecheck`                  | Type-check the backend.                               |
+| `pnpm import:scores`              | Import `data/diem_thi_thpt_2024.csv` into PostgreSQL. |
+| `pnpm --filter backend db:deploy` | Apply Prisma migrations.                              |
 
-## Development Notes
+## API endpoints
 
-- Run `pnpm install` from the repository root to maintain a consistent workspace lockfile.
-- Frontend changes are automatically reflected through Vite HMR.
-- Backend changes automatically restart the server through `tsx watch`.
-- Docker Compose provides an internal network for communication between services.
-- The `node_modules` directories are excluded from Git.
-- Environment files containing secrets must not be committed.
+| Method | Endpoint                                   | Description                                     |
+| ------ | ------------------------------------------ | ----------------------------------------------- |
+| `GET`  | `/api/scores/:sbd`                         | Get one candidate's scores.                     |
+| `GET`  | `/api/reports/subject-distribution`        | Get score-level distribution for every subject. |
+| `GET`  | `/api/reports/top-group-a`                 | Get top Group A candidates.                     |
+| `GET`  | `/api/reports/score-spectrum?subject=toan` | Get score counts for one subject.               |
 
-## Production
-
-Update later.
+Supported values for `subject` are `toan`, `ngu_van`, `ngoai_ngu`, `vat_li`, `hoa_hoc`, `sinh_hoc`, `lich_su`, `dia_li`, and `gdcd`.
