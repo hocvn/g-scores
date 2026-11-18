@@ -12,6 +12,7 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
+import { useTheme } from "../../../components/theme/useTheme";
 
 type SubjectDistributionChartProps = {
   data: SubjectDistribution[];
@@ -20,6 +21,14 @@ type SubjectDistributionChartProps = {
 export function SubjectDistributionChart({
   data,
 }: SubjectDistributionChartProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const chartText = isDark ? "#cbd5e1" : "#475569";
+  const chartLine = isDark ? "#64748b" : "#94a3b8";
+  const tooltipStyle = isDark
+    ? { backgroundColor: "#1e293b", border: "1px solid #475569", color: "#f8fafc" }
+    : undefined;
+
   return (
     <section className="rounded-xl bg-white p-5 shadow-sm sm:p-6">
       <h2 className="text-lg font-bold text-slate-900">
@@ -57,12 +66,16 @@ export function SubjectDistributionChart({
               <XAxis
                 dataKey="subject"
                 tickFormatter={(value: string) => subjectNames[value] ?? value}
-                tick={{ fontSize: 12 }}
+                tick={{ fill: chartText, fontSize: 12 }}
+                axisLine={{ stroke: chartLine }}
+                tickLine={{ stroke: chartLine }}
                 tickMargin={10}
               />
               <YAxis
                 width={60}
-                tick={{ fontSize: 12 }}
+                tick={{ fill: chartText, fontSize: 12 }}
+                axisLine={{ stroke: chartLine }}
+                tickLine={{ stroke: chartLine }}
                 tickFormatter={(value: number) => numberFormatter.format(value)}
                 allowDecimals={false}
               />
@@ -70,12 +83,14 @@ export function SubjectDistributionChart({
                 labelFormatter={(value) =>
                   subjectNames[String(value)] ?? String(value)
                 }
+                contentStyle={tooltipStyle}
+                labelStyle={isDark ? { color: "#f8fafc" } : undefined}
               />
 
-              <Bar dataKey="excellent" stackId="scores" fill="#10b981" />
-              <Bar dataKey="good" stackId="scores" fill="#3b82f6" />
-              <Bar dataKey="average" stackId="scores" fill="#fbbf24" />
-              <Bar dataKey="weak" stackId="scores" fill="#f43f5e" />
+              <Bar dataKey="excellent" stackId="scores" fill="#10b981" activeBar={false} />
+              <Bar dataKey="good" stackId="scores" fill="#3b82f6" activeBar={false} />
+              <Bar dataKey="average" stackId="scores" fill="#fbbf24" activeBar={false} />
+              <Bar dataKey="weak" stackId="scores" fill="#f43f5e" activeBar={false} />
             </BarChart>
           </ResponsiveContainer>
           <details className="mt-6 border-t border-slate-100 pt-4">
