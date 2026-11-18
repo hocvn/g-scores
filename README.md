@@ -6,6 +6,8 @@ G-Scores is a web application for exploring Vietnam's 2024 high-school examinati
 
 **Live demo:** [g-scores-seven.vercel.app](https://g-scores-seven.vercel.app/)
 
+> **Note:** The demo backend and database run on Render's free plan. After roughly 15 minutes without traffic, the services sleep; the first visit afterwards may take a short time while they start again.
+
 ## Features
 
 - Dashboard with subject-level totals, score thresholds, and score-spectrum charts.
